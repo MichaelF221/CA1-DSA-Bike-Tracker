@@ -15,6 +15,14 @@ public class CA1DSABikeTracker {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        BikeReport report1;
+        BikeReport report2;
+        
+        report1 = new AvailabilityReport(1, "Grand Canal Dock", "Empty", "No bikes available", 7);
+        report2 = new FaultReport(2, "Spencer Dock", "BrokenDock", "Dock 4 not working", 9);
+        
+        System.out.println(report1.toString());
+        System.out.println(report2.toString());
     }
     
 }

@@ -70,6 +70,8 @@ public class CA1DSABikeTracker {
         savedReports.remove(2);
         System.out.println("List after removing second item: ");
         savedReports.printList();
+        
+        
     }
     
 }

@@ -11,12 +11,16 @@ package ca1dsabiketracker;
 public class MainFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFrame.class.getName());
+    private MyQueue reportQueue;
+    private int reportCounter;
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        reportQueue = new MyQueue();
+        reportCounter = 1;
     }
 
     /**
@@ -74,6 +78,7 @@ public class MainFrame extends javax.swing.JFrame {
         btnAdd.addActionListener(this::btnAddActionPerformed);
 
         btnDisplayAll.setText("Display All");
+        btnDisplayAll.addActionListener(this::btnDisplayAllActionPerformed);
 
         btnUpdate.setText("Update");
 
@@ -229,7 +234,52 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        String stationName;
+        String issueType;
+        String details;
+        int severity;
+        BikeReport newReport;
+        
+        stationName = txtStationName.getText();
+        issueType = txtIssueType.getText();
+        details = txtDetails.getText();
+        severity = Integer.parseInt(txtSeverity.getText());
+        
+        if (issueType.equalsIgnoreCase("Empty") || issueType.equalsIgnoreCase("Full")){
+            newReport = new AvailabilityReport(reportCounter, stationName, issueType, details, severity);
+        } else{
+            newReport = new FaultReport(reportCounter, stationName, issueType, details, severity);
+        }
+        
+        txtReportId.setText(String.valueOf(reportCounter));
+        reportQueue.enqueue(newReport.toString());
+        txtOutput.append(newReport.toString() + "\n");
+        reportCounter++;
+        
+        txtStationName.setText("");
+        txtIssueType.setText("");
+        txtDetails.setText("");
+        txtSeverity.setText("");
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnDisplayAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisplayAllActionPerformed
+        // TODO add your handling code here:
+        txtOutput.setText("");
+        
+        MyQueue tempQueue;
+        tempQueue = new MyQueue();
+        
+        while (!reportQueue.isEmpty()){
+            String oneReport;
+            oneReport = (String) reportQueue.dequeue();
+            txtOutput.append(oneReport + "\n");
+            tempQueue.enqueue(oneReport);
+        }
+        
+        while (!tempQueue.isEmpty()){
+            reportQueue.enqueue(tempQueue.dequeue());
+        }
+    }//GEN-LAST:event_btnDisplayAllActionPerformed
 
     /**
      * @param args the command line arguments

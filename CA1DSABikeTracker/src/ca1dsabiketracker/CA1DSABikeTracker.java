@@ -21,8 +21,17 @@ public class CA1DSABikeTracker {
         report1 = new AvailabilityReport(1, "Grand Canal Dock", "Empty", "No bikes available", 7);
         report2 = new FaultReport(2, "Spencer Dock", "BrokenDock", "Dock 4 not working", 9);
         
-        System.out.println(report1.toString());
-        System.out.println(report2.toString());
+        MyQueue reportQueue;
+        reportQueue = new MyQueue();
+        
+        reportQueue.enqueue("Report 1 added");
+        reportQueue.enqueue("Report 2 added");
+        reportQueue.enqueue("Report 3 added");
+        
+        System.out.println("Queue size: " + reportQueue.size());
+        System.out.println("Front of queue: " + reportQueue.frontofQueue());
+        System.out.println("Dequeued item: " + reportQueue.dequeue());
+        System.out.println("Queue size after dequeue: " + reportQueue.size());
     }
     
 }

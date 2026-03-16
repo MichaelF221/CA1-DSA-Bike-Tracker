@@ -56,6 +56,20 @@ public class CA1DSABikeTracker {
         System.out.println("Top of stack: " + actionStack.peek());
         System.out.println("Popped item: " + actionStack.pop());
         System.out.println("Size of stack after pop: " + actionStack.size());
+        
+        SLList savedReports;
+        savedReports = new SLList();
+        
+        savedReports.add(1, "Saved Report 1");
+        savedReports.add(2, "Saved Report 2");
+        savedReports.add(3, "Saved Report 3");
+        
+        System.out.println("Singly Linked List contents: ");
+        savedReports.printList();
+        
+        savedReports.remove(2);
+        System.out.println("List after removing second item: ");
+        savedReports.printList();
     }
     
 }

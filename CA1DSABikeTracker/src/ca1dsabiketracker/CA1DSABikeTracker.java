@@ -32,6 +32,18 @@ public class CA1DSABikeTracker {
         System.out.println("Front of queue: " + reportQueue.frontofQueue());
         System.out.println("Dequeued item: " + reportQueue.dequeue());
         System.out.println("Queue size after dequeue: " + reportQueue.size());
+        
+        MyPriorityQueue urgentQueue;
+        urgentQueue = new MyPriorityQueue();
+        
+        urgentQueue.enqueue(7, "Empty station at Grand Canal Dock");
+        urgentQueue.enqueue(9, "Broken dock at Spencer Dock");
+        urgentQueue.enqueue(5, "Issue with terminal at Mayor Square");
+        
+        System.out.println("Priority Queue Size: " + urgentQueue.size());
+        System.out.println("Dequeued priority item: " + urgentQueue.dequeue());
+        System.out.println("Priority queue after dequeue: ");
+        urgentQueue.printPQueue();
     }
     
 }

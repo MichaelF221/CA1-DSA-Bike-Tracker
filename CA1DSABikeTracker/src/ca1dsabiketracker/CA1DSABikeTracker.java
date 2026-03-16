@@ -44,6 +44,18 @@ public class CA1DSABikeTracker {
         System.out.println("Dequeued priority item: " + urgentQueue.dequeue());
         System.out.println("Priority queue after dequeue: ");
         urgentQueue.printPQueue();
+        
+        MyStack actionStack;
+        actionStack = new MyStack();
+        
+        actionStack.push("Added report 1");
+        actionStack.push("Added report 2");
+        actionStack.push("Deleted report 1");
+        
+        System.out.println("Stack size: " + actionStack.size());
+        System.out.println("Top of stack: " + actionStack.peek());
+        System.out.println("Popped item: " + actionStack.pop());
+        System.out.println("Size of stack after pop: " + actionStack.size());
     }
     
 }

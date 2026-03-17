@@ -64,12 +64,10 @@
                               </Group>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="txtSeverity" pref="83" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txtDetails" pref="83" max="32767" attributes="0"/>
-                                      <Component id="txtIssueType" max="32767" attributes="0"/>
-                                      <Component id="txtStationName" max="32767" attributes="0"/>
-                                      <Component id="txtReportId" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="txtDetails" pref="83" max="32767" attributes="0"/>
+                                  <Component id="txtIssueType" max="32767" attributes="0"/>
+                                  <Component id="txtStationName" max="32767" attributes="0"/>
+                                  <Component id="txtReportId" max="32767" attributes="0"/>
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
@@ -250,11 +248,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Update"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnDelete">
       <Properties>
         <Property name="text" type="java.lang.String" value="Delete"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnNext">
       <Properties>
@@ -268,11 +272,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Dequeue Most Urgent"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDequeueUrgentActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnRecentAction">
       <Properties>
         <Property name="text" type="java.lang.String" value="Recent Action"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRecentActionActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>

@@ -13,6 +13,8 @@ public class MainFrame extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainFrame.class.getName());
     private MyQueue reportQueue;
     private int reportCounter;
+    private MyPriorityQueue urgentQueue;
+    private MyStack actionStack;
 
     /**
      * Creates new form MainFrame
@@ -21,6 +23,8 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         reportQueue = new MyQueue();
         reportCounter = 1;
+        urgentQueue = new MyPriorityQueue();
+        actionStack = new MyStack();
     }
 
     /**
@@ -81,15 +85,19 @@ public class MainFrame extends javax.swing.JFrame {
         btnDisplayAll.addActionListener(this::btnDisplayAllActionPerformed);
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(this::btnUpdateActionPerformed);
 
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(this::btnDeleteActionPerformed);
 
         btnNext.setText("Next");
         btnNext.addActionListener(this::btnNextActionPerformed);
 
         btnDequeueUrgent.setText("Dequeue Most Urgent");
+        btnDequeueUrgent.addActionListener(this::btnDequeueUrgentActionPerformed);
 
         btnRecentAction.setText("Recent Action");
+        btnRecentAction.addActionListener(this::btnRecentActionActionPerformed);
 
         jLabel7.setText("Output");
 
@@ -132,11 +140,10 @@ public class MainFrame extends javax.swing.JFrame {
                                         .addGap(90, 90, 90)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtSeverity, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                        .addComponent(txtIssueType)
-                                        .addComponent(txtStationName)
-                                        .addComponent(txtReportId)))
+                                    .addComponent(txtDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                                    .addComponent(txtIssueType)
+                                    .addComponent(txtStationName)
+                                    .addComponent(txtReportId))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(70, 70, 70)
@@ -230,6 +237,15 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
         // TODO add your handling code here:
+        Object nextReport;
+        nextReport = reportQueue.dequeue();
+        
+        if (nextReport == null){
+            txtOutput.setText("Queue is empty");
+        } else{
+            txtOutput.setText("Next report processed: \n" + nextReport.toString());
+            actionStack.push("Processed next report");
+        }
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
@@ -253,6 +269,8 @@ public class MainFrame extends javax.swing.JFrame {
         
         txtReportId.setText(String.valueOf(reportCounter));
         reportQueue.enqueue(newReport.toString());
+        urgentQueue.enqueue(severity, newReport.toString());
+        actionStack.push("Added report " + reportCounter);
         txtOutput.append(newReport.toString() + "\n");
         reportCounter++;
         
@@ -280,6 +298,99 @@ public class MainFrame extends javax.swing.JFrame {
             reportQueue.enqueue(tempQueue.dequeue());
         }
     }//GEN-LAST:event_btnDisplayAllActionPerformed
+
+    private void btnDequeueUrgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDequeueUrgentActionPerformed
+        // TODO add your handling code here:
+        Object urgentReport;
+        urgentReport = urgentQueue.dequeue();
+        
+        if (urgentReport == null){
+            txtOutput.setText("No urgent reports");
+        } else{
+            txtOutput.setText("Most urgent reports");
+            actionStack.push("Dequeued most urgent report");
+        }
+    }//GEN-LAST:event_btnDequeueUrgentActionPerformed
+
+    private void btnRecentActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecentActionActionPerformed
+        // TODO add your handling code here:
+        Object recentAction;
+        recentAction = actionStack.peek();
+        
+        if (recentAction == null){
+            txtOutput.setText("No recent actions");
+        } else{
+            txtOutput.setText("Recent action: \n" + recentAction.toString());
+        }
+    }//GEN-LAST:event_btnRecentActionActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+        String deleteId;
+        deleteId = txtReportId.getText();
+        
+        MyQueue tempQueue;
+        tempQueue = new MyQueue();
+        
+        while (!reportQueue.isEmpty()){
+            String oneReport;
+            oneReport = (String) reportQueue.dequeue();
+            
+            if (!oneReport.contains("Report ID: " + deleteId + ",")){
+                tempQueue.enqueue(oneReport);
+            }
+        }
+        
+        while (!tempQueue.isEmpty()){
+            reportQueue.enqueue(tempQueue.dequeue());
+        }
+        
+        txtOutput.setText("Report deleted if ID is found: " + deleteId);
+        actionStack.push("Deleted Report " + deleteId);
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        String updateId;
+        String stationName;
+        String issueType;
+        String details;
+        int severity;
+        BikeReport updatedReport;
+        
+        updateId = txtReportId.getText();
+        stationName = txtStationName.getText();
+        issueType = txtIssueType.getText();
+        details = txtDetails.getText();
+        severity = Integer.parseInt(txtSeverity.getText());
+        
+        if (issueType.equalsIgnoreCase("Empty") || issueType.equalsIgnoreCase("Full")){
+            updatedReport = new AvailabilityReport(Integer.parseInt(updateId), stationName, issueType, details, severity);
+        } else{
+            updatedReport = new FaultReport(Integer.parseInt(updateId), stationName, issueType, details, severity);
+        }
+        
+        MyQueue tempQueue;
+        tempQueue = new MyQueue();
+        
+        while (!reportQueue.isEmpty()){
+            String oneReport;
+            oneReport = (String) reportQueue.dequeue();
+            
+            if (oneReport.contains("Report ID: " + updateId + ",")){
+                tempQueue.enqueue(updatedReport.toString());
+            } else{
+                tempQueue.enqueue(oneReport);
+            }
+        }
+        
+        while (!tempQueue.isEmpty()){
+            reportQueue.enqueue(tempQueue.dequeue());
+        }
+        
+        txtOutput.setText("Report updated for ID: " + updateId);
+        actionStack.push("Updated Report " + updateId);
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
     /**
      * @param args the command line arguments
